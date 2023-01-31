@@ -14,9 +14,6 @@ inputs:
 - {name: model_name, type: String, description: 'Optional name of the model. Must
     be unique for the targeted namespace and conform Kubernetes naming conventions.
     Example: my-model.', default: my-model, optional: true}
-- {name: base_image, type: String, description: 'Optional base image for model training.
-    Example: quay.io/ibm/kubeflow-notebook-image-ppc64le:latest.', default: 'quay.io/ibm/kubeflow-notebook-image-ppc64le:latest',
-  optional: true}
 - {name: node_selector, type: String, description: 'Optional node selector for worker
     nodes. Example: nvidia.com/gpu.product: "Tesla-V100-SXM2-32GB".', default: '',
   optional: true}
@@ -59,7 +56,7 @@ outputs:
     stored.}
 implementation:
   container:
-    image: quay.io/ibm/kubeflow-notebook-image-ppc64le:latest
+    image: quay.io/ibm/kubeflow-notebook-image-ppc64le:elyra3.14.1-py3.9-tf2.10.1-pt1.10.2-v0
     command:
     - sh
     - -ec
@@ -81,7 +78,6 @@ implementation:
           model_dir,
           train_mount = "/train",
           model_name = "my-model",
-          base_image = "quay.io/ibm/kubeflow-notebook-image-ppc64le:latest",
           node_selector = "",
           pvc_name = "",
           pvc_size = "10Gi",
@@ -102,7 +98,6 @@ implementation:
                           model_dir: Target path where the model will be stored.
                           train_mount: Optional mounting point for training data of an existing PVC. Example: "/train".
                           model_name: Optional name of the model. Must be unique for the targeted namespace and conform Kubernetes naming conventions. Example: my-model.
-                          base_image: Optional base image for model training. Example: quay.io/ibm/kubeflow-notebook-image-ppc64le:latest.
                           node_selector: Optional node selector for worker nodes. Example: nvidia.com/gpu.product: "Tesla-V100-SXM2-32GB".
                           pvc_name: Optional name to an existing persistent volume claim (pvc). If given, this pvc is mounted into the training job. Example: "music-genre-classification-j4ssf-training-pvc".
                           pvc_size: Optional size of the storage during model training. Storage is mounted into to the Job based on a persitent volume claim of the given size. Example: 10Gi.
@@ -481,7 +476,7 @@ implementation:
                   "is_upload": "False",
               }
 
-              command, _, _ = initialize_command(command_specification, parameters)
+              command, _, _, _ = initialize_command(command_specification, parameters)
 
               init_container = f"""initContainers:
                 - name: init-inputs
@@ -514,6 +509,7 @@ implementation:
           ):
               component_yaml = yaml.safe_load(specification)
               container_yaml = component_yaml["implementation"]["container"]
+              training_base_image = container_yaml["image"]
               command = container_yaml["command"]
               args = container_yaml["args"]
 
@@ -572,7 +568,7 @@ implementation:
 
               command_with_initialized_args = json.dumps(command + actual_args)
 
-              return command_with_initialized_args, inputs, outputs
+              return command_with_initialized_args, inputs, outputs, training_base_image
 
           def initialize_fetch_command(
               cluster_configuration,
@@ -1209,7 +1205,7 @@ implementation:
               "validation_dataset_dir": validation_dataset_dir,
               "model_dir": model_dir,
           }
-          train_command, inputs, outputs = initialize_command(
+          train_command, inputs, outputs, base_image = initialize_command(
               train_specification, train_parameters, path_parameters, train_mount
           )
 
@@ -1354,7 +1350,6 @@ implementation:
       _parser.add_argument("--train-parameters", dest="train_parameters", type=json.loads, required=True, default=argparse.SUPPRESS)
       _parser.add_argument("--train-mount", dest="train_mount", type=str, required=False, default=argparse.SUPPRESS)
       _parser.add_argument("--model-name", dest="model_name", type=str, required=False, default=argparse.SUPPRESS)
-      _parser.add_argument("--base-image", dest="base_image", type=str, required=False, default=argparse.SUPPRESS)
       _parser.add_argument("--node-selector", dest="node_selector", type=str, required=False, default=argparse.SUPPRESS)
       _parser.add_argument("--pvc-name", dest="pvc_name", type=str, required=False, default=argparse.SUPPRESS)
       _parser.add_argument("--pvc-size", dest="pvc_size", type=str, required=False, default=argparse.SUPPRESS)
@@ -1386,11 +1381,6 @@ implementation:
         then:
         - --model-name
         - {inputValue: model_name}
-    - if:
-        cond: {isPresent: base_image}
-        then:
-        - --base-image
-        - {inputValue: base_image}
     - if:
         cond: {isPresent: node_selector}
         then:
