@@ -595,7 +595,7 @@ implementation:
                   "job_name": job_name,
                   "is_upload": "True",
               }
-              command, _, _ = initialize_command(command_specification, parameters)
+              command, _, _, _ = initialize_command(command_specification, parameters)
               return command
 
           def create_pvc_spec(pvc_name, namespace_spec, access_mode, pvc_size):

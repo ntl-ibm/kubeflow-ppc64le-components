@@ -1,0 +1,182 @@
+{
+  "doc_type": "pipeline",
+  "version": "3.0",
+  "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
+  "id": "elyra-auto-generated-pipeline",
+  "primary_pipeline": "primary",
+  "pipelines": [
+    {
+      "id": "primary",
+      "nodes": [
+        {
+          "id": "09183497-4fc6-4419-a9ae-171a73042e09",
+          "type": "execution_node",
+          "op": "url-catalog:caac3d656d7d",
+          "app_data": {
+            "component_parameters": {
+              "url": {
+                "widget": "string",
+                "value": ""
+              },
+              "file_name": {
+                "widget": "string",
+                "value": ""
+              },
+              "kubernetes_pod_annotations": [],
+              "kubernetes_pod_labels": [],
+              "kubernetes_shared_mem_size": {},
+              "kubernetes_tolerations": [],
+              "mounted_volumes": []
+            },
+            "component_source": "{\"catalog_type\": \"url-catalog\", \"component_ref\": {\"url\": \"https://raw.githubusercontent.com/lehrig/kubeflow-ppc64le-components/main/data-collection/download-and-extract-from-url/component.yaml\"}}",
+            "label": "",
+            "ui_data": {
+              "label": "Download and Extract from URL",
+              "image": "/notebook/kubeflow-ntl/yolov5/static/elyra/kubeflow.svg",
+              "x_pos": 190,
+              "y_pos": 111.5,
+              "description": "Downloads and extractions packaged files (zip/tar/tar.gz) from a URL to a persistent volume.",
+              "decorations": [
+                {
+                  "id": "error",
+                  "image": "data:image/svg+xml;utf8,%3Csvg%20focusable%3D%22false%22%20preserveAspectRatio%3D%22xMidYMid%20meet%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22%23da1e28%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20aria-hidden%3D%22true%22%3E%3Ccircle%20cx%3D%228%22%20cy%3D%228%22%20r%3D%228%22%20fill%3D%22%23ffffff%22%3E%3C%2Fcircle%3E%3Cpath%20d%3D%22M8%2C1C4.2%2C1%2C1%2C4.2%2C1%2C8s3.2%2C7%2C7%2C7s7-3.1%2C7-7S11.9%2C1%2C8%2C1z%20M7.5%2C4h1v5h-1C7.5%2C9%2C7.5%2C4%2C7.5%2C4z%20M8%2C12.2%09c-0.4%2C0-0.8-0.4-0.8-0.8s0.3-0.8%2C0.8-0.8c0.4%2C0%2C0.8%2C0.4%2C0.8%2C0.8S8.4%2C12.2%2C8%2C12.2z%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M7.5%2C4h1v5h-1C7.5%2C9%2C7.5%2C4%2C7.5%2C4z%20M8%2C12.2c-0.4%2C0-0.8-0.4-0.8-0.8s0.3-0.8%2C0.8-0.8%09c0.4%2C0%2C0.8%2C0.4%2C0.8%2C0.8S8.4%2C12.2%2C8%2C12.2z%22%20data-icon-path%3D%22inner-path%22%20opacity%3D%220%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E",
+                  "outline": false,
+                  "position": "topRight",
+                  "x_pos": -24,
+                  "y_pos": -8
+                }
+              ]
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "5e0ccf34-b2fc-4644-870a-653dc0539ccc",
+          "type": "execution_node",
+          "op": "url-catalog:6ef1a032a17f",
+          "app_data": {
+            "component_parameters": {
+              "name": {
+                "widget": "string",
+                "value": "my-spark-job"
+              },
+              "application_file": {
+                "widget": "string",
+                "value": "local:///opt/spark/examples/jars/spark-examples_2.12-3.0.1.jar"
+              },
+              "main_class": {
+                "widget": "string",
+                "value": "org.apache.spark.examples.SparkPi"
+              },
+              "requested_storage": {
+                "widget": "string",
+                "value": "1Gi"
+              },
+              "spark_version": {
+                "widget": "string",
+                "value": "3.0.1"
+              },
+              "kubernetes_pod_annotations": [],
+              "kubernetes_pod_labels": [],
+              "kubernetes_shared_mem_size": {},
+              "kubernetes_tolerations": [],
+              "mounted_volumes": []
+            },
+            "component_source": "{\"catalog_type\": \"url-catalog\", \"component_ref\": {\"url\": \"https://raw.githubusercontent.com/lehrig/kubeflow-ppc64le-components/main/data-transformation/run-spark-job/component.yaml\"}}",
+            "label": "",
+            "ui_data": {
+              "label": "Run Spark Job",
+              "image": "/notebook/kubeflow-ntl/yolov5/static/elyra/kubeflow.svg",
+              "x_pos": 448,
+              "y_pos": 112.5
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "4eb034f5-323f-46c3-8d65-562c09e48464",
+                  "node_id_ref": "09183497-4fc6-4419-a9ae-171a73042e09",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "app_data": {
+        "ui_data": {
+          "comments": []
+        },
+        "version": 8,
+        "runtime_type": "KUBEFLOW_PIPELINES",
+        "properties": {
+          "name": "untitled1",
+          "runtime": "Kubeflow Pipelines",
+          "pipeline_defaults": {
+            "kubernetes_shared_mem_size": {},
+            "mounted_volumes": [],
+            "kubernetes_pod_labels": [],
+            "kubernetes_pod_annotations": [],
+            "kubernetes_tolerations": [],
+            "env_vars": [],
+            "kubernetes_secrets": []
+          }
+        }
+      },
+      "runtime_ref": ""
+    }
+  ],
+  "schemas": []
+}
